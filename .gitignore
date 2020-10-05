@@ -7,6 +7,7 @@ logs/
 .vscode
 *.swp
 *.lock
+yarn-error.log
 
 build
 server.js
