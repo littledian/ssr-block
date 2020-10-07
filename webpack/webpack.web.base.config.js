@@ -19,5 +19,9 @@ function getEntries() {
 }
 
 module.exports = merge(config, {
-  entry: getEntries()
+  entry: getEntries(),
+  externals: {
+    react: 'React',
+    'react-dom': 'ReactDOM'
+  }
 });
