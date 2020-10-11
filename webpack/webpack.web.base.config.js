@@ -22,6 +22,8 @@ module.exports = merge(config, {
   entry: getEntries(),
   externals: {
     react: 'React',
-    'react-dom': 'ReactDOM'
+    'react-dom': 'ReactDOM',
+    antd: 'antd',
+    moment: 'moment'
   }
 });

@@ -5,6 +5,8 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const lessRegex = /\.less$/;
 const lessModuleRegex = /\.module\.less$/;
+const scssRegex = /\.scss$/;
+const scssModuleRegex = /\.module\.scss$/;
 
 const getStyleLoaders = (cssOptions, preProcessor) => {
   const loaders = [
@@ -91,8 +93,8 @@ module.exports = {
         // See https://github.com/webpack/webpack/issues/6571
         sideEffects: true
       },
-      // Adds support for CSS Modules, but using SASS
-      // using the extension .module.scss or .module.sass
+      // Adds support for CSS Modules, but using LESS
+      // using the extension .module.scss or .module.less
       {
         test: lessModuleRegex,
         use: getStyleLoaders(
@@ -108,6 +110,53 @@ module.exports = {
             options: {
               lessOptions: {
                 javascriptEnabled: true
+              }
+            }
+          }
+        )
+      },
+      {
+        test: scssRegex,
+        exclude: scssModuleRegex,
+        use: getStyleLoaders(
+          {
+            importLoaders: 3,
+            sourceMap: false
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass'),
+              sassOptions: {
+                fiber: require('fibers')
+              }
+            }
+          }
+        ),
+        // Don't consider CSS imports dead code even if the
+        // containing package claims to have no side effects.
+        // Remove this when webpack adds a warning or an error for this.
+        // See https://github.com/webpack/webpack/issues/6571
+        sideEffects: true
+      },
+      // Adds support for CSS Modules, but using LESS
+      // using the extension .module.scss or .module.less
+      {
+        test: scssModuleRegex,
+        use: getStyleLoaders(
+          {
+            importLoaders: 3,
+            sourceMap: false,
+            modules: {
+              getLocalIdent: getCSSModuleLocalIdent
+            }
+          },
+          {
+            loader: 'sass-loader',
+            options: {
+              implementation: require('sass'),
+              sassOptions: {
+                fiber: require('fibers')
               }
             }
           }

@@ -27,6 +27,7 @@
   "exclude": [
     "scripts",
     "webpack",
-    "node_modules*"
+    "node_modules*",
+    "entry"
   ]
 }
