@@ -24,5 +24,4 @@ jobs:
             docker run \
               -p 3003:4000 \
               --name ssr-block \
-              --restart always \
               -d registry.cn-hongkong.aliyuncs.com/littledian/ssr-block:latest
