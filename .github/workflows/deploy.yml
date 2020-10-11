@@ -1,0 +1,28 @@
+name: deploy
+on:
+  workflow_run:
+    workflows: ["build"]
+    types: 
+      - completed
+jobs:
+  delpoy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH Remote deploy
+        uses: docker://evaneos/ssh-action:0.1.0
+        with: 
+          hosts: 47.99.66.0
+          user: ${{ secrets.REMOTE_USERNAME }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          commands: |
+            have=$(docker inspect --format='{{.Name}}' $(docker ps -aq) |grep ssr-block  | cut -d"/" -f2)
+            if [[ "$have" == ssr-block ]]; then \
+              docker container stop ssr-block; \
+              docker container rm ssr-block; \
+            fi
+            docker rmi registry.cn-hongkong.aliyuncs.com/littledian/ssr-block:latest
+            docker run \
+              -p 3003:4000 \
+              --name ssr-block \
+              --restart always \
+              -d registry.cn-hongkong.aliyuncs.com/littledian/ssr-block:latest
